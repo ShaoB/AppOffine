@@ -13,6 +13,7 @@ import com.levcn.bean.NeedDecisionInfo;
 import com.levcn.eventbus.EventBusUtils;
 import com.levcn.eventbus.EventCode;
 import com.levcn.eventbus.EventMessage;
+import com.levcn.greendao.entiy.TaskEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class NeedUploadFragment extends BaseLazyFragment {
     private RecyclerView mRvNeedUpdate;
     private NeedDecisionAdapter needUpdateAdapter;
 
-    private List<NeedDecisionInfo> mList = new ArrayList<>();
+    private List<TaskEntity> mList = new ArrayList<>();
 
     @Override
     protected int setLayoutId() {
@@ -37,7 +38,10 @@ public class NeedUploadFragment extends BaseLazyFragment {
     @Override
     protected void loadData() {
         for (int i = 0; i < 16; i++) {
-            mList.add(new NeedDecisionInfo("待上传任务" + (i + 1), 1622536382 - (i * 100)));
+            TaskEntity taskEntity = new TaskEntity();
+            taskEntity.setTask_name("待上传" + i);
+            taskEntity.setTask_time("2021-06-05");
+            mList.add(taskEntity);
         }
         needUpdateAdapter.notifyDataSetChanged();
 

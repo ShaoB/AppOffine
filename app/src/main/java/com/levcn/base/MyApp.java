@@ -2,8 +2,10 @@ package com.levcn.base;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.DownloadManager;
 import android.content.Context;
 
+import com.levcn.greendao.DaoManager;
 import com.levcn.service.Server;
 
 /**
@@ -23,6 +25,8 @@ public class MyApp extends Application {
         super.onCreate();
         mContext = this;
         instance = this;
+
+        DaoManager.getInstance().init(this);
 
         //启动服务
         new Server(10081).start();

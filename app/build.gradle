@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.levcn"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -19,6 +19,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    greendao {
+        // 指定数据库schema版本号，迁移等操作会用到
+        schemaVersion 1
+        // 设置生成数据库文件的目录，默认是在build中，可以将生成的文件放到我们的java目录中
+        //targetGenDir 'src/main/java'
     }
 }
 
@@ -33,12 +40,14 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'//glide
     implementation 'org.greenrobot:eventbus:3.2.0'//eventBus
-    implementation 'com.google.zxing:core:3.3.0'//二维码扫描
+    implementation 'com.google.zxing:core:3.4.0'//二维码扫描
+    implementation('com.journeyapps:zxing-android-embedded:4.1.0') { transitive = false }
     implementation 'org.greenrobot:greendao:3.2.2'//数据库
     implementation 'me.jessyan:autosize:1.2.1'//适配
     implementation 'com.blankj:utilcodex:1.30.6'//工具类
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
-
-
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'org.greenrobot:greendao:3.2.2'
 
 }

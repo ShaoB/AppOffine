@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ZxingViewFinderView">
+        <attr name="scannerBoundColor" format="color" />
+        <attr name="scannerBoundWidth" format="dimension" />
+        <attr name="scannerBoundCornerColor" format="color" />
+        <attr name="scannerBoundCornerWith" format="dimension" />
+        <attr name="scannerBoundCornerHeight" format="dimension" />
+        <attr name="scannerLaserResId" format="integer" />
+    </declare-styleable>
+</resources>

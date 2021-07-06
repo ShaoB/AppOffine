@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 
+import org.greenrobot.greendao.AbstractDaoMaster;
 import org.greenrobot.greendao.annotation.NotNull;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import java.util.List;
 public class GeneralPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<Fragment> fragments;
-
     public GeneralPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
         super(fm);
         this.fragments = fragments != null ? fragments : new ArrayList<Fragment>();

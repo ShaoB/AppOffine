@@ -5,14 +5,20 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.levcn.R;
 import com.levcn.eventbus.EventBusUtils;
 import com.levcn.eventbus.EventMessage;
 import com.levcn.listener.NoDoubleClickListener;
 import com.levcn.manager.ActivityCollector;
+import com.levcn.util.SystemUi;
+import com.levcn.widget.UiHelper;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -118,5 +124,15 @@ public abstract class BaseActivity<V extends IBaseView, T extends BasePresenter<
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onReceiveStickyEvent(EventMessage event) {
+    }
+
+    public void addStatusBar(boolean isTextColor) {
+        //沉浸式
+        SystemUi.fixSystemUI(this, isTextColor);
+        ViewGroup headerView = findViewById(R.id.header_content_layout);
+        if (headerView.getChildCount() == 0) {
+            View statusView = UiHelper.createStatusView(this, Color.TRANSPARENT);
+            headerView.addView(statusView, 0);
+        }
     }
 }
