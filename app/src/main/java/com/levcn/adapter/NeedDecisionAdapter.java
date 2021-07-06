@@ -25,7 +25,7 @@ public class NeedDecisionAdapter extends BaseQuickAdapter<TaskEntity, BaseViewHo
 
     @Override
     protected void convert(@NotNull BaseViewHolder baseViewHolder, TaskEntity taskEntity) {
-        baseViewHolder.setText(R.id.tv_name, taskEntity.getTask_name())
-                .setText(R.id.tv_time, taskEntity.getTask_time());
+        baseViewHolder.setText(R.id.tv_name, taskEntity.getF_GZNR())
+                .setText(R.id.tv_time, "2021-02-02");
     }
 }

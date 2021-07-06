@@ -39,8 +39,8 @@ public class NeedUploadFragment extends BaseLazyFragment {
     protected void loadData() {
         for (int i = 0; i < 16; i++) {
             TaskEntity taskEntity = new TaskEntity();
-            taskEntity.setTask_name("待上传" + i);
-            taskEntity.setTask_time("2021-06-05");
+            taskEntity.setF_GZNR("待上传" + i);
+            //taskEntity.setTask_time("2021-06-05");
             mList.add(taskEntity);
         }
         needUpdateAdapter.notifyDataSetChanged();
