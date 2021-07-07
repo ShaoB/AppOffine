@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.levcn.R;
 import com.levcn.eventbus.EventBusUtils;
 import com.levcn.eventbus.EventMessage;
+import com.levcn.listener.NoDoubleClickListener;
 import com.levcn.widget.UiHelper;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -56,6 +57,9 @@ public abstract class BaseLazyFragment extends Fragment {
      * 初始化布局
      */
     protected abstract void initViews(View view);
+
+    protected void onDelayClick(View view) {
+    }
 
     protected void initListener() {
     }
@@ -109,6 +113,13 @@ public abstract class BaseLazyFragment extends Fragment {
         super.onDestroy();
         if (isRegisteredEventBus()) {
             EventBusUtils.unregister(this);
+        }
+    }
+
+    public class ClickListener extends NoDoubleClickListener {
+        @Override
+        public void onNoDoubleClick(View v) {
+            onDelayClick(v);
         }
     }
 

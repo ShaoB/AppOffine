@@ -6,6 +6,8 @@ import com.levcn.listener.ClientHandler;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author : shaoBin
@@ -15,6 +17,7 @@ import java.net.Socket;
 public class Server {
 
     private ServerSocket serverSocket;
+    private static List<ClientHandler> mClientHandlerList = new LinkedList<>();
 
     /**
      * 监听端口
@@ -33,12 +36,7 @@ public class Server {
 
 
     public void start() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                doStart();
-            }
-        }).start();
+        new Thread(() -> doStart()).start();
     }
 
     /**
@@ -47,13 +45,22 @@ public class Server {
     private void doStart() {
         while (true) {
             try {
-                LogUtils.eTag("sb","等待客户端链接...");
+                LogUtils.eTag("sb", "等待客户端链接...");
                 //接收连接，如果没有连接，accept() 方法会阻塞
                 Socket client = serverSocket.accept();
-                new ClientHandler(client).start();
+                ClientHandler clientHandler = new ClientHandler(client);
+                mClientHandlerList.add(clientHandler);
+                clientHandler.start();
             } catch (IOException e) {
                 LogUtils.eTag("sb", "服务端异常:" + e.toString());
             }
         }
+    }
+
+    public static ClientHandler getClientHandler() {
+        if (mClientHandlerList.size() > 0) {
+            return mClientHandlerList.get(0);
+        }
+        return null;
     }
 }

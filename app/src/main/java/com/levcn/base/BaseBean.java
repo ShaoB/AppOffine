@@ -1,15 +1,21 @@
 package com.levcn.base;
 
-import com.blankj.utilcode.util.Utils;
-import com.levcn.greendao.entiy.TaskEntity;
-
 import java.util.List;
 
 public class BaseBean<T> {
-    private boolean flag;//成功状态
-    private int code;//状态码
+    /**
+     * 成功状态
+     */
+    private boolean flag;
+    /**
+     * 状态码
+     */
+    private int code;
     private String message;
-    private List<TaskEntity> data;
+    /**
+     * 数据
+     */
+    private List<T> data;
 
     public boolean isFlag() {
         return flag;
@@ -35,11 +41,11 @@ public class BaseBean<T> {
         this.message = message;
     }
 
-    public List<TaskEntity> getData() {
+    public List<T> getData() {
         return data;
     }
 
-    public void setData(List<TaskEntity> data) {
+    public void setData(List<T> data) {
         this.data = data;
     }
 }

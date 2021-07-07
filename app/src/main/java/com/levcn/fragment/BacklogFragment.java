@@ -48,8 +48,6 @@ public class BacklogFragment extends BaseLazyFragment {
 
         mTabLayout = view.findViewById(R.id.tab_layout);
         mViewPager = view.findViewById(R.id.view_pager);
-        TextView mTvHeaderLayoutContent = view.findViewById(R.id.header_layout_content_tv);
-        mTvHeaderLayoutContent.setText("智慧安全平台");
 
         mViewPager.setOffscreenPageLimit(2);
         //禁止滑动
@@ -83,8 +81,6 @@ public class BacklogFragment extends BaseLazyFragment {
             }
         });
         mediator.attach();
-
-        addStatusBar(view);
     }
 
     @Override

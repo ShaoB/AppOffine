@@ -1,47 +1,49 @@
 package com.levcn.bean;
 
+import com.levcn.greendao.entiy.TaskEntity;
+
+import java.util.List;
+
 /**
  * @author : shaoBin
  * date   : 2021/7/6 10:26
  * desc   :
  */
 public class NeedDecisionInfo {
-    private int id;
-    /**
-     * 任务名称
-     */
-    private String taskName;
-    /**
-     * 任务时间
-     */
-    private long taskTime;
+    private boolean flag;
+    private int code;
+    private String message;
+    private List<TaskEntity> data;
 
-    public NeedDecisionInfo(String taskName, long taskTime) {
-        this.taskName = taskName;
-        this.taskTime = taskTime;
+    public boolean isFlag() {
+        return flag;
     }
 
-    public int getId() {
-        return id;
+    public void setFlag(boolean flag) {
+        this.flag = flag;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getCode() {
+        return code;
     }
 
-    public String getTaskName() {
-        return taskName;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
+    public String getMessage() {
+        return message;
     }
 
-    public long getTaskTime() {
-        return taskTime;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public void setTaskTime(long taskTime) {
-        this.taskTime = taskTime;
+    public List<TaskEntity> getData() {
+        return data;
+    }
+
+    public void setData(List<TaskEntity> data) {
+        this.data = data;
     }
 }

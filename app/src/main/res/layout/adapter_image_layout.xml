@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.levcn.widget.DirectImageView
+        android:id="@+id/subject_sign_item_img_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_margin="3dp"
+        android:background="#f2f2f2"
+        android:scaleType="center" />
+
+    <ImageView
+        android:id="@+id/subject_sign_item_delete_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="@null"
+        android:contentDescription="@string/app_name"
+        android:src="@mipmap/icon1_delet"
+        android:visibility="gone" />
+</RelativeLayout>

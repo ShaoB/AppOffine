@@ -14,4 +14,9 @@ public class EventCode {
      * 插入待见证数据成功
      */
     public static final int INSERT_DATA_SUCCESS = 100003;
+
+    /**
+     * 修改待见证数据成功
+     */
+    public static final int UPDATE_DATA_SUCCESS = 100004;
 }

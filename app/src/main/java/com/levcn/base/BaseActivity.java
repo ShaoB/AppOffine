@@ -3,9 +3,11 @@ package com.levcn.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,5 +136,13 @@ public abstract class BaseActivity<V extends IBaseView, T extends BasePresenter<
             View statusView = UiHelper.createStatusView(this, Color.TRANSPARENT);
             headerView.addView(statusView, 0);
         }
+    }
+
+    /**
+     * 判断单个权限
+     */
+    protected boolean checkPermissions(String permission) {
+        int check = checkSelfPermission(permission);
+        return check == PackageManager.PERMISSION_GRANTED;
     }
 }

@@ -43,6 +43,8 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     protected void initViews() {
+        TextView mTvHeaderLayoutContent = findViewById(R.id.header_layout_content_tv);
+        mTvHeaderLayoutContent.setText("智慧安全平台");
         mViewpager = findViewById(R.id.viewpager);
         mTabLayout = findViewById(R.id.tab_layout);
 
@@ -54,7 +56,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mViewpager.setCurrentItem(0);
         this.setTabLayout();
 
-        SystemUi.fixSystemUI(this, true);
+        addStatusBar(true);
     }
 
     @Override
@@ -67,9 +69,11 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if ((System.currentTimeMillis() - this.exitTime) > 2000) {
+            if ((System.currentTimeMillis() - this.exitTime) > 2 * 1000) {
                 ToastUtils.showShort("再按一次退出程序");
                 this.exitTime = System.currentTimeMillis();
+            }else {
+                finish();
             }
             return true;
         }

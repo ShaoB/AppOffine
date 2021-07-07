@@ -4,14 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/header_content_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"/>
-
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_completed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="已办任务" />
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp" />
 </LinearLayout>

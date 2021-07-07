@@ -7,6 +7,14 @@
     android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
+    <LinearLayout
+        android:id="@+id/header_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <include layout="@layout/header_layout" />
+    
     <com.levcn.widget.NoScrollViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"

@@ -1,19 +1,25 @@
 package com.levcn.listener;
 
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.internal.LinkedTreeMap;
-import com.levcn.base.BaseBean;
+import com.levcn.activity.MainActivity;
+import com.levcn.bean.NeedDecisionInfo;
 import com.levcn.eventbus.EventBusUtils;
 import com.levcn.eventbus.EventCode;
 import com.levcn.eventbus.EventMessage;
 import com.levcn.greendao.entiy.TaskEntity;
+import com.levcn.greendao.entiy.TaskEntityDao;
+import com.levcn.greendao.utils.CommonDaoUtils;
+import com.levcn.greendao.utils.Constants;
 import com.levcn.greendao.utils.DaoUtilsStore;
 
 import java.io.BufferedWriter;
@@ -43,12 +49,7 @@ public class ClientHandler {
 
     public void start() {
         LogUtils.eTag("sb", "新客户端接入");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                doStart();
-            }
-        }).start();
+        new Thread(() -> doStart()).start();
     }
 
     /**
@@ -65,7 +66,14 @@ public class ClientHandler {
                 String message = new String(data, 0, len);
                 stringBuilder.append(message);
                 LogUtils.eTag("sb", "收到客户端消息：" + message);
-                socket.getOutputStream().write(data);
+                //socket.getOutputStream().write(data);
+                if ("1".equals(message)) {
+                    String s = new Gson().toJson(DaoUtilsStore.getInstance().getTaskUtils().queryByQueryBuilder(TaskEntityDao.Properties.State.eq(Constants.TASK_STATE_NEED_UPDATE)));
+                    sendMessage(s);
+                    updateData();
+                } else {
+                    sendMessage("不是一");
+                }
             }
             LogUtils.eTag("sb", "完整的消息：" + stringBuilder);
 
@@ -74,19 +82,23 @@ public class ClientHandler {
             }
 
             if (stringBuilder.toString().startsWith("{")) {
-                BaseBean baseBean = new Gson().fromJson(stringBuilder.toString(), BaseBean.class);
-                if (baseBean.isFlag()) {
-                    //List<TaskEntity> objectList = getObjectList(new Gson().toJson(baseBean.getData().toString()), TaskEntity.class);
-                    List<TaskEntity> data1 = baseBean.getData();
-
-                    for (TaskEntity task : data1) {
+               /* BaseBean<TaskEntity> baseBean = new Gson().fromJson(stringBuilder.toString(), new TypeToken<BaseBean<List<TaskEntity>>>() {
+                }.getType());*/
+                NeedDecisionInfo needDecisionInfo = new Gson().fromJson(stringBuilder.toString(), NeedDecisionInfo.class);
+                if (needDecisionInfo.isFlag()) {
+                    List<TaskEntity> taskEntityList = needDecisionInfo.getData();
+                    int count = 0;
+                    for (TaskEntity task : taskEntityList) {
                         boolean b = DaoUtilsStore.getInstance().getTaskUtils().insert(task);
                         LogUtils.eTag("sb", "插入：" + b);
                         if (b) {
-                            EventBusUtils.post(new EventMessage<>(EventCode.INSERT_DATA_SUCCESS));
-                        } else {
-                            ToastUtils.showShort("插入数据失败");
+                            count++;
                         }
+                    }
+                    if (count == taskEntityList.size()) {
+                        EventBusUtils.post(new EventMessage<>(EventCode.INSERT_DATA_SUCCESS));
+                    } else {
+                        ToastUtils.showShort(taskEntityList.size() - count + "条数据，插入数据失败");
                     }
                 } else {
                     ToastUtils.showShort("后台返回数据，flag为false");
@@ -106,32 +118,37 @@ public class ClientHandler {
      * 发送数据给客户端
      */
     public void sendMessage(final String data) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    PrintWriter out = new PrintWriter(new BufferedWriter(
-                            new OutputStreamWriter(socket.getOutputStream())), true);
-                    out.println(data);
-                    out.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        new Thread(() -> {
+            try {
+                PrintWriter out = new PrintWriter(new BufferedWriter(
+                        new OutputStreamWriter(socket.getOutputStream())), true);
+                LogUtils.eTag("sb", "发送给客户端的数据：" + data);
+                out.println(data);
+                out.flush();
+                //关闭输出流
+                socket.shutdownOutput();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }).start();
     }
 
-    public static <T> List<T> getObjectList(String jsonString, Class<T> cls) {
-        List<T> list = new ArrayList<T>();
-        try {
-            Gson gson = new Gson();
-            JsonArray arry = new JsonParser().parse(jsonString).getAsJsonArray();
-            for (JsonElement jsonElement : arry) {
-                list.add(gson.fromJson(jsonElement, cls));
+    private void updateData() {
+        CommonDaoUtils<TaskEntity> taskUtils = DaoUtilsStore.getInstance().getTaskUtils();
+        List<TaskEntity> taskEntities = taskUtils.queryByQueryBuilder(TaskEntityDao.Properties.State.eq(Constants.TASK_STATE_NEED_UPDATE));
+        int count = 0;
+        for (TaskEntity taskEntity : taskEntities) {
+            taskEntity.setState(Constants.TASK_STATE_COMPLETE);
+            boolean b = taskUtils.update(taskEntity);
+            if (b) {
+                count++;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return list;
+        if (count == taskEntities.size()) {
+            ToastUtils.showShort("全部上传成功");
+        } else {
+            ToastUtils.showShort(taskEntities.size() - count + "条数据未上传成功");
+        }
+        EventBusUtils.post(new EventMessage<>(EventCode.UPDATE_DATA_SUCCESS));
     }
 }
