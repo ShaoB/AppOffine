@@ -30,6 +30,9 @@ public class MyApp extends Application {
 
         DaoManager.getInstance().init(this);
 
+        //启动服务
+        new Server(10081).start();
+
         String uniqueDeviceId = DeviceUtils.getUniqueDeviceId();
         LogUtils.eTag("sb","设备唯一ID："+ uniqueDeviceId);
     }
