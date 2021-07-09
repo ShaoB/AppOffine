@@ -19,7 +19,7 @@ import com.levcn.eventbus.EventMessage;
 /**
  * @author : shaoBin
  * date   : 2021/7/5 17:51
- * desc   : 待办任务
+ * desc   : 待办任务adb kill-server, adb start-server
  */
 public class BacklogFragment extends BaseLazyFragment {
 

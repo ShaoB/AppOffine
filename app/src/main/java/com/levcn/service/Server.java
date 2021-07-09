@@ -1,6 +1,7 @@
 package com.levcn.service;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.levcn.listener.ClientHandler;
 
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class Server {
     public Server(int port) {
         try {
             this.serverSocket = new ServerSocket(port);
+            ToastUtils.showShort("服务启动成功");
             LogUtils.eTag("sb", "服务端启动成功，端口：" + port);
         } catch (IOException e) {
             e.printStackTrace();

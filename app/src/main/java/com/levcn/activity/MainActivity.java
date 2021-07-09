@@ -1,7 +1,12 @@
 package com.levcn.activity;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,6 +27,7 @@ import com.levcn.fragment.BacklogFragment;
 import com.levcn.fragment.CompletedFragment;
 import com.levcn.fragment.NoticeFragment;
 import com.levcn.presenter.MainPresenter;
+import com.levcn.receiver.UsbReceiver;
 import com.levcn.util.SystemUi;
 import com.levcn.view.IMainView;
 
@@ -35,6 +41,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     private ViewPager mViewpager;
     private TabLayout mTabLayout;
+
 
     @Override
     protected void onMyCreate(Bundle savedInstanceState) {
@@ -57,6 +64,8 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         this.setTabLayout();
 
         addStatusBar(true);
+
+        new UsbReceiver().registerUsbReceiver(this);
     }
 
     @Override
@@ -78,6 +87,11 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

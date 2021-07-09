@@ -5,6 +5,8 @@ import android.app.Application;
 import android.app.DownloadManager;
 import android.content.Context;
 
+import com.blankj.utilcode.util.DeviceUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.levcn.greendao.DaoManager;
 import com.levcn.service.Server;
 
@@ -28,8 +30,8 @@ public class MyApp extends Application {
 
         DaoManager.getInstance().init(this);
 
-        //启动服务
-        new Server(10081).start();
+        String uniqueDeviceId = DeviceUtils.getUniqueDeviceId();
+        LogUtils.eTag("sb","设备唯一ID："+ uniqueDeviceId);
     }
 
     public static MyApp getApplication() {

@@ -49,7 +49,12 @@ public class ClientHandler {
 
     public void start() {
         LogUtils.eTag("sb", "新客户端接入");
-        new Thread(() -> doStart()).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                doStart();
+            }
+        }).start();
     }
 
     /**
@@ -118,17 +123,20 @@ public class ClientHandler {
      * 发送数据给客户端
      */
     public void sendMessage(final String data) {
-        new Thread(() -> {
-            try {
-                PrintWriter out = new PrintWriter(new BufferedWriter(
-                        new OutputStreamWriter(socket.getOutputStream())), true);
-                LogUtils.eTag("sb", "发送给客户端的数据：" + data);
-                out.println(data);
-                out.flush();
-                //关闭输出流
-                socket.shutdownOutput();
-            } catch (IOException e) {
-                e.printStackTrace();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PrintWriter out = new PrintWriter(new BufferedWriter(
+                            new OutputStreamWriter(socket.getOutputStream())), true);
+                    LogUtils.eTag("sb", "发送给客户端的数据：" + data);
+                    out.println(data);
+                    out.flush();
+                    //关闭输出流
+                    socket.shutdownOutput();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
     }
