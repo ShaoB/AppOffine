@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -26,6 +27,8 @@ import com.levcn.eventbus.EventMessage;
 import com.levcn.fragment.BacklogFragment;
 import com.levcn.fragment.CompletedFragment;
 import com.levcn.fragment.NoticeFragment;
+import com.levcn.greendao.utils.JumpKey;
+import com.levcn.greendao.utils.JumpUtils;
 import com.levcn.presenter.MainPresenter;
 import com.levcn.receiver.UsbReceiver;
 import com.levcn.util.SystemUi;
@@ -41,6 +44,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     private ViewPager mViewpager;
     private TabLayout mTabLayout;
+    private ImageView mIvRisk;
 
 
     @Override
@@ -52,6 +56,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     protected void initViews() {
         TextView mTvHeaderLayoutContent = findViewById(R.id.header_layout_content_tv);
         mTvHeaderLayoutContent.setText("智慧安全平台");
+        mIvRisk = findViewById(R.id.iv_risk);
         mViewpager = findViewById(R.id.viewpager);
         mTabLayout = findViewById(R.id.tab_layout);
 
@@ -73,6 +78,38 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         return new MainPresenter();
     }
 
+    @Override
+    protected void initListener() {
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 2) {
+                    mIvRisk.setVisibility(View.VISIBLE);
+                } else {
+                    mIvRisk.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        mIvRisk.setOnClickListener(new ClickListener());
+    }
+
+    @Override
+    protected void onDelayClick(View view) {
+        if (view.getId() == R.id.iv_risk) {
+            JumpUtils.goNext(this, RiskActivity.class);
+        }
+    }
+
     private long exitTime = 0;
 
     @Override
@@ -81,7 +118,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
             if ((System.currentTimeMillis() - this.exitTime) > 2 * 1000) {
                 ToastUtils.showShort("再按一次退出程序");
                 this.exitTime = System.currentTimeMillis();
-            }else {
+            } else {
                 finish();
             }
             return true;
@@ -117,7 +154,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         Tab[] tabs = new Tab[mTabLayout.getTabCount()];
         tabs[0] = new Tab(R.drawable.tab_backlog_selector, "待办任务");
         tabs[1] = new Tab(R.drawable.tab_completed_selector, "已办任务");
-        tabs[2] = new Tab(R.drawable.tab_notice_selector, "通知");
+        tabs[2] = new Tab(R.drawable.tab_notice_selector, "发现隐患");
 
         for (int i = 0; i < tabs.length; i++) {
             View view = this.buildView(tabs[i].getIcon(), tabs[i].getTag());

@@ -1,18 +1,13 @@
 package com.levcn.listener;
 
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-
+import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.levcn.activity.MainActivity;
-import com.levcn.bean.NeedDecisionInfo;
+import com.levcn.base.BaseBean;
+import com.levcn.bean.DeviceInfo;
+import com.levcn.bean.ResultBean;
 import com.levcn.eventbus.EventBusUtils;
 import com.levcn.eventbus.EventCode;
 import com.levcn.eventbus.EventMessage;
@@ -28,7 +23,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,56 +57,19 @@ public class ClientHandler {
     private void doStart() {
         try {
             InputStream inputStream = socket.getInputStream();
-            StringBuilder stringBuilder = new StringBuilder();
             // (true) {
             byte[] data = new byte[MAX_DATA_LEN];
             int len;
             while ((len = inputStream.read(data)) != -1) {
                 String message = new String(data, 0, len);
-                stringBuilder.append(message);
                 LogUtils.eTag("sb", "收到客户端消息：" + message);
-                //socket.getOutputStream().write(data);
-                if ("1".equals(message)) {
-                    String s = new Gson().toJson(DaoUtilsStore.getInstance().getTaskUtils().queryByQueryBuilder(TaskEntityDao.Properties.State.eq(Constants.TASK_STATE_NEED_UPDATE)));
-                    sendMessage(s);
-                    updateData();
+
+                if (StringUtils.isEmpty(message)) {
+                    sendMessage("");
                 } else {
-                    sendMessage("不是一");
+                    judgeData(message);
                 }
             }
-            LogUtils.eTag("sb", "完整的消息：" + stringBuilder);
-
-            if (StringUtils.isEmpty(stringBuilder)) {
-                return;
-            }
-
-            if (stringBuilder.toString().startsWith("{")) {
-               /* BaseBean<TaskEntity> baseBean = new Gson().fromJson(stringBuilder.toString(), new TypeToken<BaseBean<List<TaskEntity>>>() {
-                }.getType());*/
-                NeedDecisionInfo needDecisionInfo = new Gson().fromJson(stringBuilder.toString(), NeedDecisionInfo.class);
-                if (needDecisionInfo.isFlag()) {
-                    List<TaskEntity> taskEntityList = needDecisionInfo.getData();
-                    int count = 0;
-                    for (TaskEntity task : taskEntityList) {
-                        boolean b = DaoUtilsStore.getInstance().getTaskUtils().insert(task);
-                        LogUtils.eTag("sb", "插入：" + b);
-                        if (b) {
-                            count++;
-                        }
-                    }
-                    if (count == taskEntityList.size()) {
-                        EventBusUtils.post(new EventMessage<>(EventCode.INSERT_DATA_SUCCESS));
-                    } else {
-                        ToastUtils.showShort(taskEntityList.size() - count + "条数据，插入数据失败");
-                    }
-                } else {
-                    ToastUtils.showShort("后台返回数据，flag为false");
-                }
-            } else {
-                ToastUtils.showShort("请检查数据格式");
-            }
-            //}
-
         } catch (IOException e) {
             e.printStackTrace();
             LogUtils.eTag("sb", "读取stream失败：" + e.getMessage());
@@ -132,8 +89,7 @@ public class ClientHandler {
                     LogUtils.eTag("sb", "发送给客户端的数据：" + data);
                     out.println(data);
                     out.flush();
-                    //关闭输出流
-                    socket.shutdownOutput();
+                    out.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -158,5 +114,43 @@ public class ClientHandler {
             ToastUtils.showShort(taskEntities.size() - count + "条数据未上传成功");
         }
         EventBusUtils.post(new EventMessage<>(EventCode.UPDATE_DATA_SUCCESS));
+    }
+
+    private void judgeData(String message) {
+        if (message.startsWith("{")) {
+            BaseBean baseBean = new Gson().fromJson(message, BaseBean.class);
+
+            LogUtils.eTag("sb", new Gson().toJson(baseBean));
+            if (baseBean.getAction().equals(Constants.GET_UNIQUE_DEVICE_ID)) {
+                DeviceInfo deviceInfo = new DeviceInfo(DeviceUtils.getUniqueDeviceId());
+                sendMessage(new Gson().toJson(deviceInfo));
+            } else if (baseBean.getAction().equals(Constants.SEND_BACKLOG)) {
+                List beanData = baseBean.getData();
+                LogUtils.eTag("sb", "-----" + new Gson().toJson(beanData));
+                sendMessage(new Gson().toJson(new ResultBean(true)));
+            }
+
+                /*NeedDecisionInfo needDecisionInfo = new Gson().fromJson(stringBuilder.toString(), NeedDecisionInfo.class);
+                if (needDecisionInfo.isFlag()) {
+                    List<TaskEntity> taskEntityList = needDecisionInfo.getData();
+                    int count = 0;
+                    for (TaskEntity task : taskEntityList) {
+                        boolean b = DaoUtilsStore.getInstance().getTaskUtils().insert(task);
+                        LogUtils.eTag("sb", "插入：" + b);
+                        if (b) {
+                            count++;
+                        }
+                    }
+                    if (count == taskEntityList.size()) {
+                        EventBusUtils.post(new EventMessage<>(EventCode.INSERT_DATA_SUCCESS));
+                    } else {
+                        ToastUtils.showShort(taskEntityList.size() - count + "条数据，插入数据失败");
+                    }
+                } else {
+                    ToastUtils.showShort("后台返回数据，flag为false");
+                }*/
+        } else {
+            ToastUtils.showShort("请检查数据格式");
+        }
     }
 }

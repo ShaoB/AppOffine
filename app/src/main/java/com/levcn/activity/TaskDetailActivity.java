@@ -35,7 +35,7 @@ import java.util.List;
 public class TaskDetailActivity extends BaseActivity<IMainView, MainPresenter> implements IMainView {
 
     private TextView mTvWorkAddress, mTvWorkContent, mTvNearbyPeople, mTvReceiveTime, mTvTaskState, mTvInspectContent, mTvInspectTime;
-    private Button mBtScan, mBtPush;
+    private Button mBtScan;
     private ImageView mIvBack;
     private int taskState;
     private TaskEntity taskEntity;
@@ -72,7 +72,6 @@ public class TaskDetailActivity extends BaseActivity<IMainView, MainPresenter> i
 
         mLlAction = findViewById(R.id.ll_action);
         mBtScan = findViewById(R.id.bt_scan);
-        mBtPush = findViewById(R.id.bt_push);
 
         addStatusBar(true);
 
@@ -134,7 +133,6 @@ public class TaskDetailActivity extends BaseActivity<IMainView, MainPresenter> i
     @Override
     protected void initListener() {
         mBtScan.setOnClickListener(new ClickListener());
-        mBtPush.setOnClickListener(new ClickListener());
         mIvBack.setOnClickListener(new ClickListener());
         if (imageAdapter != null) {
             imageAdapter.setOnItemClickListener((adapter, view, position) -> {
@@ -155,8 +153,6 @@ public class TaskDetailActivity extends BaseActivity<IMainView, MainPresenter> i
             Bundle bundle = new Bundle();
             bundle.putParcelable(JumpKey.TASK_DETAIL, taskEntity);
             JumpUtils.goNext(mActivity, CaptureMicaActivity.class, "bundle", bundle, true);
-        } else if (view.getId() == R.id.bt_push) {
-            ToastUtils.showShort("推送");
         } else if (view.getId() == R.id.iv_back) {
             finish();
         }

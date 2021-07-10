@@ -1,0 +1,9 @@
+
+{"action":"","data":[]}
+adtion 行为
+      1、getUniqueDeviceId //获取设备唯一id
+      举例：{"action":"getUniqueDeviceId","data":[]}
+      返回类型：{"uniqueDeviceID":"2143048b0f0d43b198ab3459b2dded5a3"}
+      2、sendBacklog  //发送待见证任务
+      举例：{"action":"sendBacklog","data":[{"f_GZNR":"大萨达撒多222","f_GZFZR_NAME":"管理员","f_PZR":"1399982788341399553,1399618980070555650","f_PZR_NAME":"李铁鑫,窦鹏飞222","f_GZDD_NAME":"电蓄热锅炉房","f_FXDJ_NAME":"重大风险","f_PZZT_NAME":"未旁站","id_":"1373828527120527361"},{"f_GZNR":"萨达撒多萨达撒所所所所所所所","f_GZFZR_NAME":"潘鹏才","f_PZR":"1399618327797563393","f_PZR_NAME":"窦鹏飞","f_GZDD_NAME":"1#主厂房,电蓄热锅炉房","f_FXDJ_NAME":"重大风险","f_PZZT_NAME":"已旁站","id_":"1376790425923301378"}]}
+      返回类型：{"flag":true}

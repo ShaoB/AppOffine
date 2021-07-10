@@ -5,40 +5,45 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.levcn.R;
 
 public class UsbReceiver extends BroadcastReceiver {
 
-    private boolean BOOLEAN=false;
+    private boolean bOOLEAN = false;
 
-    //usb线的广播
+    /**
+     * usb线的广播
+     */
     private final static String TAGUSB = "android.hardware.usb.action.USB_STATE";
-    private MediaPlayer mediaPlayer;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         //判断存储usb
-        if (action.equals(TAGUSB)) {
-            boolean connected = intent.getExtras().getBoolean("connected");
-            if (connected) {
-                LogUtils.eTag("sb","USB 已经连接");
-                mediaPlayer.start();
+        if (action != null) {
+            if (action.equals(TAGUSB)) {
+                Bundle bundle = intent.getExtras();
+                if (bundle == null) {
+                    return;
+                }
+                boolean connected = intent.getExtras().getBoolean("connected");
+                if (connected) {
+                    LogUtils.eTag("sb", "USB 已经连接");
 
-            } else {
-                if (BOOLEAN) {
-                    LogUtils.eTag("sb","USB 断开");
-                    mediaPlayer.stop();
+                } else {
+                    if (bOOLEAN) {
+                        LogUtils.eTag("sb", "USB 断开");
+                    }
                 }
             }
+            bOOLEAN = true;
         }
-        BOOLEAN=true;
     }
 
     public void registerUsbReceiver(Context context) {
-        mediaPlayer = MediaPlayer.create(context, R.raw.cc);
         IntentFilter filter = new IntentFilter();
         filter.addAction(TAGUSB);
         context.registerReceiver(this, filter);

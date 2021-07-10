@@ -14,4 +14,8 @@ public class JumpKey {
      * 任务状态
      */
     public static final String TASK_STATE = "taskState";
+    /**
+     * 隐患详情
+     */
+    public static final String RISK_DETAIL = "taskDetail";
 }

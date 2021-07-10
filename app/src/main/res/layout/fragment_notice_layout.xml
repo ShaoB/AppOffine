@@ -4,14 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/header_content_layout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_notice"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="通知" />
+        android:layout_height="match_parent"/>
 </LinearLayout>

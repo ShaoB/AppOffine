@@ -28,7 +28,6 @@ public class Server {
     public Server(int port) {
         try {
             this.serverSocket = new ServerSocket(port);
-            ToastUtils.showShort("服务启动成功");
             LogUtils.eTag("sb", "服务端启动成功，端口：" + port);
         } catch (IOException e) {
             e.printStackTrace();

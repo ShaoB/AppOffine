@@ -19,4 +19,9 @@ public class EventCode {
      * 修改待见证数据成功
      */
     public static final int UPDATE_DATA_SUCCESS = 100004;
+
+    /**
+     * 新建隐患成功
+     */
+    public static final int CREATE_RISK_SUCCESS = 100005;
 }

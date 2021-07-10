@@ -23,7 +23,6 @@ public class TaskEntity implements Parcelable {
     /**
      * 任务id
      */
-    @NotNull
     private String f_GZNR;
     private String f_GZFZR_NAME;
     private String f_PZR;
@@ -57,11 +56,11 @@ public class TaskEntity implements Parcelable {
         inspectTime = in.readString();
     }
 
-    @Generated(hash = 563303068)
-    public TaskEntity(Long _id, @NotNull String f_GZNR, String f_GZFZR_NAME,
-                      String f_PZR, String f_PZR_NAME, String f_GZDD_NAME, String f_FXDJ_NAME,
-                      String f_PZZT_NAME, String id_, int state, String imgUrls,
-                      String InspectContent, String inspectTime) {
+    @Generated(hash = 1204568228)
+    public TaskEntity(Long _id, String f_GZNR, String f_GZFZR_NAME, String f_PZR,
+            String f_PZR_NAME, String f_GZDD_NAME, String f_FXDJ_NAME, String f_PZZT_NAME,
+            String id_, int state, String imgUrls, String InspectContent,
+            String inspectTime) {
         this._id = _id;
         this.f_GZNR = f_GZNR;
         this.f_GZFZR_NAME = f_GZFZR_NAME;

@@ -12,13 +12,15 @@ public class ImageInfo {
      */
     private int type;
     private String url;
+    private String localPath;
     /**
      * 0 展示 1 不展示
      */
     private int showType;
 
-    public ImageInfo(String url) {
+    public ImageInfo(String url, String localPath) {
         this.url = url;
+        this.localPath = localPath;
     }
 
     public ImageInfo(String url, int showType) {
@@ -53,5 +55,13 @@ public class ImageInfo {
 
     public void setShowType(int showType) {
         this.showType = showType;
+    }
+
+    public String getLocalPath() {
+        return localPath;
+    }
+
+    public void setLocalPath(String localPath) {
+        this.localPath = localPath;
     }
 }

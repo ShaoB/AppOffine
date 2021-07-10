@@ -28,4 +28,16 @@
         android:textColor="@color/color_black"
         android:textSize="19sp"
         tools:ignore="RelativeOverlap" />
+
+    <ImageView
+        android:id="@+id/iv_risk"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="15dp"
+        android:contentDescription="@string/picture_original_image"
+        android:src="@mipmap/icon_risk"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </RelativeLayout>

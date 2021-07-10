@@ -26,7 +26,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="UnusedAttribute">
-        <activity android:name=".activity.TaskRedactActivity"></activity>
+        <activity android:name=".activity.RiskDetailActivity"></activity>
+        <activity android:name=".activity.RiskActivity" />
+        <activity android:name=".activity.TaskRedactActivity" />
         <activity android:name=".activity.CaptureMicaActivity" />
         <activity android:name=".activity.TaskDetailActivity" />
         <activity android:name=".activity.MainActivity">

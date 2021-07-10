@@ -19,4 +19,17 @@ public class Constants {
      * 已办任务
      */
     public static final int TASK_STATE_COMPLETE = 2;
+
+
+
+
+    //-----------------------行为------------------------------
+    /**
+     * 获取设备唯一id
+     */
+    public static final String GET_UNIQUE_DEVICE_ID = "getUniqueDeviceId";
+    /**
+     * 发送待见证任务
+     */
+    public static final String SEND_BACKLOG = "sendBacklog";
 }
