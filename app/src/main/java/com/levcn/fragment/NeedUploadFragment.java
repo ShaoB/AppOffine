@@ -18,6 +18,7 @@ import com.levcn.R;
 import com.levcn.activity.TaskDetailActivity;
 import com.levcn.adapter.TaskAdapter;
 import com.levcn.base.BaseLazyFragment;
+import com.levcn.bean.ResultBean;
 import com.levcn.eventbus.EventBusUtils;
 import com.levcn.eventbus.EventCode;
 import com.levcn.eventbus.EventMessage;
@@ -42,6 +43,7 @@ public class NeedUploadFragment extends BaseLazyFragment {
 
     private RecyclerView mRvNeedUpdate;
     private TaskAdapter needUpdateAdapter;
+    private Button mBtUpdate;
 
     private List<TaskEntity> mList = new ArrayList<>();
 
@@ -62,6 +64,7 @@ public class NeedUploadFragment extends BaseLazyFragment {
     @Override
     protected void initViews(View view) {
         mRvNeedUpdate = view.findViewById(R.id.rv_need_update);
+        mBtUpdate = view.findViewById(R.id.bt_update);
 
         needUpdateAdapter = new TaskAdapter(mList);
         mRvNeedUpdate.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -77,6 +80,16 @@ public class NeedUploadFragment extends BaseLazyFragment {
             bundle.putInt(JumpKey.TASK_STATE, Constants.TASK_STATE_NEED_UPDATE);
             bundle.putParcelable(JumpKey.TASK_DETAIL, mList.get(position));
             JumpUtils.goNext(mActivity, TaskDetailActivity.class, "bundle", bundle, false);
+        });
+        mBtUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClientHandler clientHandler = Server.getClientHandler();
+                if (clientHandler != null) {
+                    ResultBean<TaskEntity> taskEntityResultBean = new ResultBean<>(true, Constants.SEND_UPDATE_TASK, mList);
+                    clientHandler.sendMessage(new Gson().toJson(taskEntityResultBean));
+                }
+            }
         });
     }
 

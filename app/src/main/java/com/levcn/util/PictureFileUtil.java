@@ -3,8 +3,10 @@ package com.levcn.util;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
+import android.os.Environment;
 
 import com.levcn.R;
+import com.levcn.greendao.utils.Constants;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -30,6 +32,8 @@ public class PictureFileUtil {
         PictureSelector.create(mContext)
                 .openCamera(PictureMimeType.ofImage())
                 .loadImageEngine(GlideEngine.createGlideEngine()) // 请参考Demo GlideEngine.java
+                //.compress(true)
+                //.compressSavePath(Environment.getExternalStorageDirectory().getPath() + Constants.CACHE_IMG_PATH)
                 .forResult(PictureConfig.REQUEST_CAMERA);
     }
 

@@ -10,33 +10,18 @@ import java.util.List;
  * desc   :
  */
 public class NeedDecisionInfo {
-    private boolean flag;
-    private int code;
-    private String message;
+    /**
+     * 行为
+     */
+    private String action;
     private List<TaskEntity> data;
 
-    public boolean isFlag() {
-        return flag;
+    public String getAction() {
+        return action;
     }
 
-    public void setFlag(boolean flag) {
-        this.flag = flag;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public List<TaskEntity> getData() {

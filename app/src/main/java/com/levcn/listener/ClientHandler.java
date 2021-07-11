@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.levcn.base.BaseBean;
 import com.levcn.bean.DeviceInfo;
+import com.levcn.bean.NeedDecisionInfo;
 import com.levcn.bean.ResultBean;
 import com.levcn.eventbus.EventBusUtils;
 import com.levcn.eventbus.EventCode;
@@ -23,6 +24,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -35,7 +38,7 @@ public class ClientHandler {
      * 数据连接值
      */
     public static final int MAX_DATA_LEN = 1024;
-    private final Socket socket;
+    private Socket socket;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -56,10 +59,22 @@ public class ClientHandler {
      */
     private void doStart() {
         try {
+
+            /*BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String clientInputStr = input.readLine();//这里要注意和客户端输出流的写方法对应,否则会抛 EOFException
+            // 处理客户端数据
+            System.out.println("客户端发过来的内容:" + clientInputStr);
+
+            if (StringUtils.isEmpty(clientInputStr)) {
+                sendMessage("");
+            } else {
+                judgeData(clientInputStr);
+            }*/
+
             InputStream inputStream = socket.getInputStream();
-            // (true) {
             byte[] data = new byte[MAX_DATA_LEN];
             int len;
+            //这里要注意和客户端输出流的写方法对应,否则会抛 EOFException
             while ((len = inputStream.read(data)) != -1) {
                 String message = new String(data, 0, len);
                 LogUtils.eTag("sb", "收到客户端消息：" + message);
@@ -72,7 +87,17 @@ public class ClientHandler {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            LogUtils.eTag("sb", e);
             LogUtils.eTag("sb", "读取stream失败：" + e.getMessage());
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (Exception e) {
+                    socket = null;
+                    System.out.println("服务端 finally 异常:" + e.getMessage());
+                }
+            }
         }
     }
 
@@ -89,7 +114,8 @@ public class ClientHandler {
                     LogUtils.eTag("sb", "发送给客户端的数据：" + data);
                     out.println(data);
                     out.flush();
-                    out.close();
+                    //out.close();
+                    socket.shutdownOutput();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -119,38 +145,34 @@ public class ClientHandler {
     private void judgeData(String message) {
         if (message.startsWith("{")) {
             BaseBean baseBean = new Gson().fromJson(message, BaseBean.class);
-
             LogUtils.eTag("sb", new Gson().toJson(baseBean));
             if (baseBean.getAction().equals(Constants.GET_UNIQUE_DEVICE_ID)) {
                 DeviceInfo deviceInfo = new DeviceInfo(DeviceUtils.getUniqueDeviceId());
-                sendMessage(new Gson().toJson(deviceInfo));
+                List<DeviceInfo> list = new LinkedList<>();
+                list.add(deviceInfo);
+                sendMessage(new Gson().toJson(new ResultBean<DeviceInfo>(true, Constants.GET_UNIQUE_DEVICE_ID, list)));
             } else if (baseBean.getAction().equals(Constants.SEND_BACKLOG)) {
-                List beanData = baseBean.getData();
-                LogUtils.eTag("sb", "-----" + new Gson().toJson(beanData));
-                sendMessage(new Gson().toJson(new ResultBean(true)));
-            }
+                NeedDecisionInfo needDecisionInfo = new Gson().fromJson(message, NeedDecisionInfo.class);
+                List<TaskEntity> taskEntityList = needDecisionInfo.getData();
+                int count = 0;
+                for (TaskEntity task : taskEntityList) {
+                    boolean b = DaoUtilsStore.getInstance().getTaskUtils().insert(task);
+                    LogUtils.eTag("sb", "插入：" + b);
+                    if (b) {
+                        count++;
+                    }
+                }
+                if (count == taskEntityList.size()) {
+                    EventBusUtils.post(new EventMessage<>(EventCode.INSERT_DATA_SUCCESS));
 
-                /*NeedDecisionInfo needDecisionInfo = new Gson().fromJson(stringBuilder.toString(), NeedDecisionInfo.class);
-                if (needDecisionInfo.isFlag()) {
-                    List<TaskEntity> taskEntityList = needDecisionInfo.getData();
-                    int count = 0;
-                    for (TaskEntity task : taskEntityList) {
-                        boolean b = DaoUtilsStore.getInstance().getTaskUtils().insert(task);
-                        LogUtils.eTag("sb", "插入：" + b);
-                        if (b) {
-                            count++;
-                        }
-                    }
-                    if (count == taskEntityList.size()) {
-                        EventBusUtils.post(new EventMessage<>(EventCode.INSERT_DATA_SUCCESS));
-                    } else {
-                        ToastUtils.showShort(taskEntityList.size() - count + "条数据，插入数据失败");
-                    }
                 } else {
-                    ToastUtils.showShort("后台返回数据，flag为false");
-                }*/
+                    ToastUtils.showShort(taskEntityList.size() - count + "条数据，插入数据失败");
+                }
+                sendMessage(new Gson().toJson(new ResultBean<>(true, Constants.SEND_BACKLOG, null)));
+            }
         } else {
             ToastUtils.showShort("请检查数据格式");
+            sendMessage(new Gson().toJson(new ResultBean<>(false, "", null)));
         }
     }
 }

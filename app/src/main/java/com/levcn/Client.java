@@ -28,7 +28,6 @@ public class Client {
                 //输入文字，从控制台输入
                 Scanner san = new Scanner(System.in);
                 String str = san.next();
-                System.out.println("我:" + str);
                 out.write(str.getBytes());
                 out.flush();
                 //接收信息

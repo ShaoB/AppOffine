@@ -10,4 +10,11 @@
         android:layout_marginTop="15dp"
         android:paddingStart="15dp"
         android:paddingEnd="15dp" />
+
+    <Button
+        android:id="@+id/bt_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="上传" />
 </RelativeLayout>

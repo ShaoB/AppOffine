@@ -27,7 +27,8 @@ public class Server {
      */
     public Server(int port) {
         try {
-            this.serverSocket = new ServerSocket(port);
+            //最大连接数3
+            this.serverSocket = new ServerSocket(port, 3);
             LogUtils.eTag("sb", "服务端启动成功，端口：" + port);
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,12 +47,14 @@ public class Server {
     private void doStart() {
         while (true) {
             try {
-                LogUtils.eTag("sb", "等待客户端链接...");
-                //接收连接，如果没有连接，accept() 方法会阻塞
-                Socket client = serverSocket.accept();
-                ClientHandler clientHandler = new ClientHandler(client);
-                mClientHandlerList.add(clientHandler);
-                clientHandler.start();
+                while (true) {
+                    LogUtils.eTag("sb", "等待客户端链接...");
+                    //接收连接，如果没有连接，accept() 方法会阻塞
+                    Socket client = serverSocket.accept();
+                    ClientHandler clientHandler = new ClientHandler(client);
+                    mClientHandlerList.add(clientHandler);
+                    clientHandler.start();
+                }
             } catch (IOException e) {
                 LogUtils.eTag("sb", "服务端异常:" + e.toString());
             }
@@ -60,7 +63,7 @@ public class Server {
 
     public static ClientHandler getClientHandler() {
         if (mClientHandlerList.size() > 0) {
-            return mClientHandlerList.get(0);
+            return mClientHandlerList.get(mClientHandlerList.size() - 1);
         }
         return null;
     }

@@ -192,6 +192,9 @@ public class RiskActivity extends BaseActivity<IMainView, MainPresenter> impleme
                 if (result.size() != 0) {
                     for (int i = 0; i < result.size(); i++) {
                         imgUrls.add(0, new ImageInfo(result.get(i).getPath(), result.get(i).getRealPath()));
+                        String s = Base64Utils.imageToBase64Str(result.get(i).getRealPath());
+
+                        System.out.println(s);
                         LogUtils.eTag("sb", result.get(i).getPath());
                     }
 
@@ -199,6 +202,8 @@ public class RiskActivity extends BaseActivity<IMainView, MainPresenter> impleme
                         imgUrls.remove(3);
                     }
                     imageAdapter.notifyDataSetChanged();
+
+
                 }
             }
         }
